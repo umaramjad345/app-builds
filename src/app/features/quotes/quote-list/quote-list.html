@@ -1,0 +1,194 @@
+<mat-card>
+  <mat-card-title class="card-title">Quotes</mat-card-title>
+  <form
+    [formGroup]="quotesSearchForm"
+    class="quotes-search-form"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="row mx-2 mt-3">
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Order Number</mat-label>
+          <input matInput type="number" formControlName="orderNumber" />
+          @if (quotesSearchForm.get('orderNumber')?.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="clearValue('orderNumber')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="">All</mat-option>
+            @for (option of statusOptions; track option) {
+            <mat-option [value]="option">{{ option }}</mat-option>
+            }
+          </mat-select>
+          @if (quotesSearchForm.get('status')?.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="clearValue('status')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Rework Status</mat-label>
+          <mat-select formControlName="reworkStatus">
+            <mat-option value="">All</mat-option>
+            <mat-option
+              *ngFor="let option of reworkStatusOptions"
+              [value]="option"
+              >{{ option }}</mat-option
+            >
+          </mat-select>
+          @if (quotesSearchForm.get('reworkStatus')?.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="clearValue('reworkStatus')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>PO Number</mat-label>
+          <input matInput type="number" formControlName="poNumber" />
+          @if (quotesSearchForm.get('poNumber')?.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="clearValue('poNumber')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Invoice Number</mat-label>
+          <input matInput type="number" formControlName="invoiceNumber" />
+          @if (quotesSearchForm.get('invoiceNumber')?.value) {
+          <button
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="clearValue('invoiceNumber')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </mat-form-field>
+      </div>
+      <div class="col-12 col-md-3">
+        <app-date-range-input
+          label="Order Date Range"
+          [startControl]="quotesSearchForm.get('startDateFrom') ?? undefined"
+          [endControl]="quotesSearchForm.get('startDateTo') ?? undefined"
+        >
+        </app-date-range-input>
+      </div>
+    </div>
+
+    <div class="row mx-2 mb-2">
+      <div class="col-12 text-end">
+        <button mat-raised-button color="primary" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+</mat-card>
+
+<!-- Table Section -->
+<mat-card>
+  <div class="table-toolbar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search..." />
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <table
+      mat-table
+      [dataSource]="orderDataSource"
+      matSort
+      class="mat-elevation-z2"
+    >
+      <!-- Example Columns -->
+      <ng-container matColumnDef="orderNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order #</th>
+        <td mat-cell *matCellDef="let order">{{ order.orderNumber }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let order">{{ order.status }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="reworkStatus">
+        <th mat-header-cell *matHeaderCellDef>Rework</th>
+        <td mat-cell *matCellDef="let order">{{ order.reworkStatus }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="poNumber">
+        <th mat-header-cell *matHeaderCellDef>PO #</th>
+        <td mat-cell *matCellDef="let order">{{ order.poNumber }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="invoiceNumber">
+        <th mat-header-cell *matHeaderCellDef>Invoice #</th>
+        <td mat-cell *matCellDef="let order">{{ order.invoiceNumber }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let order">
+          <button mat-icon-button color="accent" matTooltip="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr *ngIf="orderDataSource.filteredData.length === 0">
+        <td [attr.colspan]="displayedColumns.length" class="empty-state">
+          No orders found.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+    ></mat-paginator>
+  </div>
+</mat-card>

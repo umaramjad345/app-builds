@@ -1,0 +1,55 @@
+<!-- If form controls are provided, bind the date inputs to them -->
+<mat-form-field *ngIf="startControl && endControl" appearance="outline" class="full-length">
+  <mat-label>{{ label }}</mat-label>
+  <mat-date-range-input [rangePicker]="range">
+    <input
+      matStartDate
+      [attr.id]="startId"
+      [attr.name]="startName"
+      [attr.tabindex]="tabIndex"
+      [readonly]="readonly"
+      placeholder="Start date"
+      [formControl]="$any(startControl)"
+    />
+    <input
+      matEndDate
+      [attr.id]="endId"
+      [attr.name]="endName"
+      [attr.tabindex]="tabIndex"
+      [readonly]="readonly"
+      placeholder="End date"
+      [formControl]="$any(endControl)"
+    />
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="range"></mat-datepicker-toggle>
+  <mat-date-range-picker #range></mat-date-range-picker>
+</mat-form-field>
+
+<!-- If no form controls are provided, use ngModel for two-way binding -->
+<mat-form-field *ngIf="!startControl && !endControl" appearance="outline" class="full-length">
+  <mat-label>{{ label }}</mat-label>
+  <mat-date-range-input [rangePicker]="range">
+    <input
+      matStartDate
+      [attr.id]="startId"
+      [attr.name]="startName"
+      [attr.tabindex]="tabIndex"
+      [readonly]="readonly"
+      placeholder="Start date"
+      [ngModel]="startDate"
+      (ngModelChange)="onStartChange($event)"
+    />
+    <input
+      matEndDate
+      [attr.id]="endId"
+      [attr.name]="endName"
+      [attr.tabindex]="tabIndex"
+      [readonly]="readonly"
+      placeholder="End date"
+      [ngModel]="endDate"
+      (ngModelChange)="onEndChange($event)"
+    />
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="range"></mat-datepicker-toggle>
+  <mat-date-range-picker #range></mat-date-range-picker>
+</mat-form-field>
